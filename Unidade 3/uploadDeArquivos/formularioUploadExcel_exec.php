@@ -5,7 +5,11 @@ unset($_SESSION['erro']);
 try{
     if(isset($_FILES['arquivoUpload'])){ //sempre faço isso para evitar problemas de alguem acessar direto a pagina sem passar pelo formulario
         validacaoSimplesUpload($_FILES['arquivoUpload']);
-        file_put_contents(__DIR__ . '/financas/MeuControle.xlsx', file_get_contents($_FILES['arquivoUpload']['tmp_name']));
+        $pastaLocal = __DIR__ . '/financas/';
+        if(!is_dir($pastaLocal)){ //crio a pasta caso nao exista
+            mkdir($pastaLocal, 0777, true);
+        }
+        file_put_contents($pastaLocal . '/MeuControle.xlsx', file_get_contents($_FILES['arquivoUpload']['tmp_name']));
         //dai aqui seria a parte que iria ler o arquivo e enviar os dados para o BD
         $_SESSION['sucesso'] = 'Arquivo ('.$_FILES['arquivoUpload']['name'].') foi Enviado ao Servidor com S U C E S S O';
     }else{
